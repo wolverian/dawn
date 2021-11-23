@@ -1,5 +1,3 @@
-open import Data.Product hiding (swap) renaming (_,_ to ⟨_,_⟩)
-
 data Int : Set where
   swap : Int
   clone : Int
