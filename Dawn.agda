@@ -109,10 +109,12 @@ or = ` clone ∘ ` apply
 
 or-false-false : ∀ {V e}
                → (v : Value e)
+                 -------------------------------------
                → ⟪ V , v , false-value ⟫ or ⟶⟪ V , v ⟫
 or-false-false {V} {e} v = ξ-∘ (ξ-i-clone false-value) (ξ-i-apply (ξ-i-drop false-value))
 
 or-true : ∀ {V e}
         → (v : Value e)
+          ---------------------------------------------
         → ⟪ V , v , true-value ⟫ or ⟶⟪ V , true-value ⟫
 or-true {V} {e} v = ξ-∘ (ξ-i-clone true-value) (ξ-i-apply (ξ-∘ (ξ-i-swap v true-value) (ξ-i-drop v)))
