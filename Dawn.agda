@@ -81,8 +81,14 @@ data ⟪_⟫_⟶⟪_⟫ : Stack → Expr → Stack → Set where
 false : Expr
 false = ⟦ ` drop ⟧
 
+false-value : Value false
+false-value = ⟦ ` drop ⟧
+
 true : Expr
 true = ⟦ ` swap ∘ ` drop ⟧
+
+true-value : Value true
+true-value = ⟦ ` swap ∘ ` drop ⟧
 
 false-thm : ∀ {V e e′}
           → (v : Value e)
@@ -97,3 +103,16 @@ true-thm : ∀ {V e e′}
            -----------------------------------------
          → ⟪ V , v , v′ ⟫ true ∘ ` apply ⟶⟪ V , v′ ⟫
 true-thm {V} {e} {e′} v v′ = ξ-∘ ξ-quote (ξ-i-apply (ξ-∘ (ξ-i-swap v v′) (ξ-i-drop v)))
+
+or : Expr
+or = ` clone ∘ ` apply
+
+or-false-false : ∀ {V e}
+               → (v : Value e)
+               → ⟪ V , v , false-value ⟫ or ⟶⟪ V , v ⟫
+or-false-false {V} {e} v = ξ-∘ (ξ-i-clone false-value) (ξ-i-apply (ξ-i-drop false-value))
+
+or-true : ∀ {V e}
+        → (v : Value e)
+        → ⟪ V , v , true-value ⟫ or ⟶⟪ V , true-value ⟫
+or-true {V} {e} v = ξ-∘ (ξ-i-clone true-value) (ξ-i-apply (ξ-∘ (ξ-i-swap v true-value) (ξ-i-drop v)))
