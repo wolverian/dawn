@@ -1,3 +1,5 @@
+open import Data.Nat
+
 data Int : Set where
   swap : Int
   clone : Int
@@ -118,3 +120,16 @@ or-true : ∀ {V e}
           ---------------------------------------------
         → ⟪ V , v , true-value ⟫ or ⟶⟪ V , true-value ⟫
 or-true {V} {e} v = ξ-∘ (ξ-i-clone true-value) (ξ-i-apply (ξ-∘ (ξ-i-swap v true-value) (ξ-i-drop v)))
+
+quoteₙ : ℕ → Expr
+quoteₙ zero = ` quot
+quoteₙ (suc n) = quoteₙ n ∘ ` swap ∘ ` quot ∘ ` swap ∘ ` compose
+
+quote₂-thm : ∀ {V e e′}
+           → (v : Value e)
+           → (v′ : Value e′)
+           → ⟪ V , v , v′ ⟫ quoteₙ 1 ⟶⟪ V , ⟦ e ∘ e′ ⟧ ⟫
+quote₂-thm {V} {e} {e′} v v′ = ξ-∘
+                                 (ξ-∘ (ξ-∘ (ξ-∘ (ξ-i-quote v′) (ξ-i-swap v ⟦ e′ ⟧)) (ξ-i-quote v))
+                                  (ξ-i-swap ⟦ e′ ⟧ ⟦ e ⟧))
+                                 ξ-i-compose
