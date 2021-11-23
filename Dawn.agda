@@ -28,7 +28,8 @@ data Stack : Set where
 
   ⟨⟩ : Stack
 
-  _,_ : ∀ {e} (V : Stack)
+  _,_ : ∀ {e}
+      → (V : Stack)
       → (v : Value e)
       → Stack
 
