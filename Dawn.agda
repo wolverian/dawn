@@ -46,9 +46,9 @@ data ⟨_⟩_→⟨_⟩ : Stack → Expr → Stack → Set where
          → ⟨ V , v , v′ ⟩ ` swap →⟨ V , v′ , v ⟩
 
   i-clone : ∀ {V e}
-            → (v : Value e)
-              --------------------------------
-            → ⟨ V , v ⟩ ` clone →⟨ V , v , v ⟩
+          → (v : Value e)
+            --------------------------------
+          → ⟨ V , v ⟩ ` clone →⟨ V , v , v ⟩
 
   i-drop : ∀ {V e}
              ---------------------------
