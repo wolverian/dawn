@@ -1,20 +1,20 @@
 open import Data.Nat
 
 data Int : Set where
-  swap : Int
-  clone : Int
-  drop : Int
-  quot : Int
+  swap    : Int
+  clone   : Int
+  drop    : Int
+  quot    : Int
   compose : Int
-  apply : Int
+  apply   : Int
 
-infix 5 ⟦_⟧
+infix  5 ⟦_⟧
 infixl 7 _∘_
-infix 9 `_
+infix  9 `_
 
 data Expr : Set where
 
-  `_ : Int → Expr
+  `_  : Int → Expr
 
   ⟦_⟧ : Expr → Expr
 
@@ -28,7 +28,7 @@ infixl 4 _,_
 
 data Stack : Set where
 
-  ⟨⟩ : Stack
+  ⟨⟩  : Stack
 
   _,_ : ∀ {e}
       → (V : Stack)
@@ -50,8 +50,8 @@ mutual
         → ⟨ V ⟩ ` i ′→⟨ V′ ⟩
 
     ξ-⟦⟧ : ∀ {V e}
-              --------------------------
-            → ⟨ V ⟩ ⟦ e ⟧ ′→⟨ V , ⟦ e ⟧ ⟩
+           --------------------------
+         → ⟨ V ⟩ ⟦ e ⟧ ′→⟨ V , ⟦ e ⟧ ⟩
 
     ξ-∘ : ∀ {V V′ W v v′}
         → ⟨ V  ⟩ v  ′→⟨ V′ ⟩
@@ -66,10 +66,10 @@ mutual
   data ⟨_⟩_→⟨_⟩ : Stack → Int → Stack → Set where
 
     ξ-i-swap : ∀ {V e e′}
-            → (v : Value e)
-            → (v′ : Value e′)
-              ---------------------------------------
-            → ⟨ V , v , v′ ⟩ swap →⟨ V , v′ , v ⟩
+             → (v : Value e)
+             → (v′ : Value e′)
+               ---------------------------------------
+             → ⟨ V , v , v′ ⟩ swap →⟨ V , v′ , v ⟩
 
     ξ-i-clone : ∀ {V e}
               → (v : Value e)
@@ -77,8 +77,8 @@ mutual
               → ⟨ V , v ⟩ clone →⟨ V , v , v ⟩
 
     ξ-i-drop : ∀ {V e}
-              --------------------------------
-            → ⟨ V , ⟦ e ⟧ ⟩ drop →⟨ V ⟩
+               --------------------------------
+             → ⟨ V , ⟦ e ⟧ ⟩ drop →⟨ V ⟩
 
     ξ-i-quote : ∀ {V e}
                 -------------------------------
