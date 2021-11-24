@@ -115,10 +115,10 @@ mutual
 ∨ = ` clone ∘ ` apply
 
 ∨-⊥-⊥ : ∀ {V e} → ⟨ V , ⟦ e ⟧ , ⊥-value ⟩ ∨ ′→⟨ V , ⟦ e ⟧ ⟩
-∨-⊥-⊥ {V} {e} = ξ-∘ (ξ-` (ξ-i-clone ⟦ ` drop ⟧)) (ξ-` (ξ-i-apply (ξ-` ξ-i-drop)))
+∨-⊥-⊥ {V} {e} = ξ-∘ (ξ-` (ξ-i-clone ⊥-value)) (ξ-` (ξ-i-apply (ξ-` ξ-i-drop)))
 
 ∨-⊤ : ∀ {V e} → ⟨ V , ⟦ e ⟧ , ⊤-value ⟩ ∨ ′→⟨ V , ⊤-value ⟩
-∨-⊤ {V} {e} = ξ-∘ (ξ-` (ξ-i-clone ⊤-value)) (ξ-` (ξ-i-apply (ξ-∘ (ξ-` (ξ-i-swap ⟦ e ⟧ ⟦ ` swap ∘ ` drop ⟧)) (ξ-` ξ-i-drop))))
+∨-⊤ {V} {e} = ξ-∘ (ξ-` (ξ-i-clone ⊤-value)) (ξ-` (ξ-i-apply (ξ-∘ (ξ-` (ξ-i-swap ⟦ e ⟧ ⊤-value)) (ξ-` ξ-i-drop))))
 
 quoteₙ : ℕ → Expr
 quoteₙ zero = ` quot
