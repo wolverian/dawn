@@ -1,20 +1,20 @@
 open import Data.Nat
 
 data Int : Set where
-  swap : Int
-  clone : Int
-  drop : Int
-  quot : Int
+  swap    : Int
+  clone   : Int
+  drop    : Int
+  quot    : Int
   compose : Int
-  apply : Int
+  apply   : Int
 
-infix 5 ⟦_⟧
+infix  5 ⟦_⟧
 infixl 7 _∘_
-infix 9 `_
+infix  9 `_
 
 data Expr : Set where
 
-  `_ : Int → Expr
+  `_  : Int → Expr
 
   ⟦_⟧ : Expr → Expr
 
@@ -28,7 +28,7 @@ infixl 4 _,_
 
 data Stack : Set where
 
-  ⟨⟩ : Stack
+  ⟨⟩  : Stack
 
   _,_ : ∀ {e}
       → (V : Stack)
