@@ -39,9 +39,7 @@ infix 3 ⟨_⟩_→⟨_⟩
 
 data ⟨_⟩_→⟨_⟩ : Stack → Expr → Stack → Set where
 
-  -- Trying to use implicit Values in i-swap and i-clone ends in pain, so we
-  -- require them explicitly.  It is unclear to me why they're fine in the other
-  -- rules.
+  -- TODO: Trying to use implicit Values in i-swap and i-clone ends in pain, so we require them explicitly.  It is unclear to me why they're fine in the other rules.
 
   i-swap : ∀ {V e e′}
          → (v : Value e)
@@ -121,3 +119,8 @@ quote₂-thm {V} {e} {e′} = e-∘
 composeₙ : ℕ → Expr
 composeₙ zero = ` compose
 composeₙ (suc n) = ` compose ∘ composeₙ n
+
+-- TODO: Canonical forms
+-- TODO: Progress
+-- TODO: Preservation
+-- TODO: Evaluation
