@@ -44,7 +44,7 @@ data ⟪_⟫_⟶⟪_⟫ : Stack → Expr → Stack → Set where
            → (v : Value e)
            → (v′ : Value e′)
              ---------------------------------------
-           → ⟪ (V , v) , v′ ⟫ ` swap ⟶⟪ V , v′ , v ⟫
+           → ⟪ V , v , v′ ⟫ ` swap ⟶⟪ V , v′ , v ⟫
 
   ξ-i-clone : ∀ {V e}
             → (v : Value e)
