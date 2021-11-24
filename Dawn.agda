@@ -39,6 +39,10 @@ infix 3 ⟨_⟩_→⟨_⟩
 
 data ⟨_⟩_→⟨_⟩ : Stack → Expr → Stack → Set where
 
+  -- Trying to use implicit Values in i-swap and i-clone ends in pain, so we
+  -- require them explicitly.  It is unclear to me why they're fine in the other
+  -- rules.
+
   i-swap : ∀ {V e e′}
          → (v : Value e)
          → (v′ : Value e′)
