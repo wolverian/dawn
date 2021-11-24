@@ -47,12 +47,12 @@ data ⟨_⟩_→⟨_⟩ : Stack → Expr → Stack → Set where
 
   -- intrinsics
 
-  ξ-i-swap    : ⟨ V , v , v′         ⟩          ` swap    →⟨ V , v′ , v        ⟩
-  ξ-i-clone   : ⟨ V , ⟦ e ⟧          ⟩          ` clone   →⟨ V , ⟦ e ⟧ , ⟦ e ⟧ ⟩
-  ξ-i-drop    : ⟨ V , ⟦ e ⟧          ⟩          ` drop    →⟨ V                 ⟩
-  ξ-i-quote   : ⟨ V , ⟦ e ⟧          ⟩          ` quot    →⟨ V , ⟦ e ⟧         ⟩
-  ξ-i-compose : ⟨ V , ⟦ e ⟧ , ⟦ e′ ⟧ ⟩          ` compose →⟨ V , ⟦ e ∘ e′ ⟧    ⟩
-  ξ-i-apply   : ⟨ V ⟩ e →⟨ V′ ⟩ → ⟨ V , ⟦ e ⟧ ⟩ ` apply   →⟨ V′                ⟩
+  ξ-i-swap    : ⟨ V , v , v′ ⟩ ` swap →⟨ V , v′ , v ⟩
+  ξ-i-clone   : ⟨ V , ⟦ e ⟧ ⟩ ` clone →⟨ V , ⟦ e ⟧ , ⟦ e ⟧ ⟩
+  ξ-i-drop    : ⟨ V , ⟦ e ⟧ ⟩ ` drop →⟨ V ⟩
+  ξ-i-quote   : ⟨ V , ⟦ e ⟧ ⟩ ` quot →⟨ V , ⟦ e ⟧ ⟩
+  ξ-i-compose : ⟨ V , ⟦ e ⟧ , ⟦ e′ ⟧ ⟩ ` compose →⟨ V , ⟦ e ∘ e′ ⟧ ⟩
+  ξ-i-apply   : ⟨ V ⟩ e →⟨ V′ ⟩ → ⟨ V , ⟦ e ⟧ ⟩ ` apply →⟨ V′ ⟩
 
   -- expressions
 
