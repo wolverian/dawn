@@ -35,47 +35,63 @@ data Stack : Set where
       → (v : Value e)
       → Stack
 
-infix 3 ⟨_⟩_→⟨_⟩
+infix 3 ⟨_⟩_′→⟨_⟩
 
-data ⟨_⟩_→⟨_⟩ : Stack → Expr → Stack → Set where
+mutual
 
-  ξ-i-swap : ∀ {V e e′}
-           → (v : Value e)
-           → (v′ : Value e′)
-             ---------------------------------------
-           → ⟨ V , v , v′ ⟩ ` swap →⟨ V , v′ , v ⟩
+  -- reduction of expressions
 
-  ξ-i-clone : ∀ {V e}
-            → (v : Value e)
-              --------------------------------
-            → ⟨ V , v ⟩ ` clone →⟨ V , v , v ⟩
+  data ⟨_⟩_′→⟨_⟩ : Stack → Expr → Stack → Set where
 
-  ξ-i-drop : ∀ {V e}
-             --------------------------------
-           → ⟨ V , ⟦ e ⟧ ⟩ ` drop →⟨ V ⟩
+    -- this rule ties together ⟨_⟩_′→⟨_⟩ and ⟨_⟩_→⟨_⟩.
+    ξ-` : ∀ {V V′ i}
+        → ⟨ V ⟩ i →⟨ V′ ⟩
+          -----------------
+        → ⟨ V ⟩ ` i ′→⟨ V′ ⟩
 
-  ξ-i-quote : ∀ {V e}
-              -------------------------------
-            → ⟨ V , ⟦ e ⟧ ⟩ ` quot →⟨ V , ⟦ e ⟧ ⟩
+    ξ-⟦⟧ : ∀ {V e}
+           --------------------------
+         → ⟨ V ⟩ ⟦ e ⟧ ′→⟨ V , ⟦ e ⟧ ⟩
 
-  ξ-i-compose : ∀ {V e e′}
-                ---------------------------------------------------
-              → ⟨ V , ⟦ e ⟧ , ⟦ e′ ⟧ ⟩ ` compose →⟨ V , ⟦ e ∘ e′ ⟧ ⟩
+    ξ-∘ : ∀ {V V′ W v v′}
+        → ⟨ V  ⟩ v  ′→⟨ V′ ⟩
+        → ⟨ V′ ⟩ v′ ′→⟨ W  ⟩
+          -------------------
+        → ⟨ V ⟩ v ∘ v′ ′→⟨ W ⟩
 
-  ξ-i-apply : ∀ {V V′ e}
-            → ⟨ V ⟩ e →⟨ V′ ⟩
-              -----------------------------
-            → ⟨ V , ⟦ e ⟧ ⟩ ` apply →⟨ V′ ⟩
+  infix 3 ⟨_⟩_→⟨_⟩
 
-  ξ-quote : ∀ {V e}
-            --------------------------
-          → ⟨ V ⟩ ⟦ e ⟧ →⟨ V , ⟦ e ⟧ ⟩
+  -- reduction of intrinsics
 
-  ξ-∘ : ∀ {V V′ W v v′}
-      → ⟨ V  ⟩ v  →⟨ V′ ⟩
-      → ⟨ V′ ⟩ v′ →⟨ W  ⟩
-        -------------------
-      → ⟨ V ⟩ v ∘ v′ →⟨ W ⟩
+  data ⟨_⟩_→⟨_⟩ : Stack → Int → Stack → Set where
+
+    ξ-i-swap : ∀ {V e e′}
+             → (v : Value e)
+             → (v′ : Value e′)
+               ---------------------------------------
+             → ⟨ V , v , v′ ⟩ swap →⟨ V , v′ , v ⟩
+
+    ξ-i-clone : ∀ {V e}
+              → (v : Value e)
+                --------------------------------
+              → ⟨ V , v ⟩ clone →⟨ V , v , v ⟩
+
+    ξ-i-drop : ∀ {V e}
+               --------------------------------
+             → ⟨ V , ⟦ e ⟧ ⟩ drop →⟨ V ⟩
+
+    ξ-i-quote : ∀ {V e}
+                -------------------------------
+              → ⟨ V , ⟦ e ⟧ ⟩ quot →⟨ V , ⟦ e ⟧ ⟩
+
+    ξ-i-compose : ∀ {V e e′}
+                  ---------------------------------------------------
+                → ⟨ V , ⟦ e ⟧ , ⟦ e′ ⟧ ⟩ compose →⟨ V , ⟦ e ∘ e′ ⟧ ⟩
+
+    ξ-i-apply : ∀ {V V′ e}
+              → ⟨ V ⟩ e ′→⟨ V′ ⟩
+                -----------------------------
+              → ⟨ V , ⟦ e ⟧ ⟩ apply →⟨ V′ ⟩
 
 ⊥ : Expr
 ⊥ = ⟦ ` drop ⟧
@@ -89,30 +105,32 @@ data ⟨_⟩_→⟨_⟩ : Stack → Expr → Stack → Set where
 ⊤-value : Value ⊤
 ⊤-value = ⟦ ` swap ∘ ` drop ⟧
 
-⊥-thm : ∀ {V e e′} → ⟨ V , ⟦ e ⟧ , ⟦ e′ ⟧ ⟩ ⊥ ∘ ` apply →⟨ V , ⟦ e ⟧ ⟩
-⊥-thm {V} {e} {e′} = ξ-∘ ξ-quote (ξ-i-apply ξ-i-drop)
+⊥-thm : ∀ {V e e′} → ⟨ V , ⟦ e ⟧ , ⟦ e′ ⟧ ⟩ ⊥ ∘ ` apply ′→⟨ V , ⟦ e ⟧ ⟩
+⊥-thm {V} {e} {e′} = ξ-∘ ξ-⟦⟧ (ξ-` (ξ-i-apply (ξ-` ξ-i-drop)))
 
-⊤-thm : ∀ {V e e′} → ⟨ V , ⟦ e ⟧ , ⟦ e′ ⟧ ⟩ ⊤ ∘ ` apply →⟨ V , ⟦ e′ ⟧ ⟩
-⊤-thm {V} {e} {e′} = ξ-∘ ξ-quote (ξ-i-apply (ξ-∘ (ξ-i-swap ⟦ e ⟧ ⟦ e′ ⟧) ξ-i-drop))
+⊤-thm : ∀ {V e e′} → ⟨ V , ⟦ e ⟧ , ⟦ e′ ⟧ ⟩ ⊤ ∘ ` apply ′→⟨ V , ⟦ e′ ⟧ ⟩
+⊤-thm {V} {e} {e′} = ξ-∘ ξ-⟦⟧ (ξ-` (ξ-i-apply (ξ-∘ (ξ-` (ξ-i-swap ⟦ e ⟧ ⟦ e′ ⟧)) (ξ-` ξ-i-drop))))
 
 ∨ : Expr
 ∨ = ` clone ∘ ` apply
 
-∨-⊥-⊥ : ∀ {V e} → ⟨ V , ⟦ e ⟧ , ⊥-value ⟩ ∨ →⟨ V , ⟦ e ⟧ ⟩
-∨-⊥-⊥ {V} {e} = ξ-∘ (ξ-i-clone ⊥-value) (ξ-i-apply (ξ-i-drop ))
+∨-⊥-⊥ : ∀ {V e} → ⟨ V , ⟦ e ⟧ , ⊥-value ⟩ ∨ ′→⟨ V , ⟦ e ⟧ ⟩
+∨-⊥-⊥ {V} {e} = ξ-∘ (ξ-` (ξ-i-clone ⊥-value)) (ξ-` (ξ-i-apply (ξ-` ξ-i-drop)))
 
-∨-⊤ : ∀ {V e} → ⟨ V , ⟦ e ⟧ , ⊤-value ⟩ ∨ →⟨ V , ⊤-value ⟩
-∨-⊤ {V} {e} = ξ-∘ (ξ-i-clone ⊤-value) (ξ-i-apply (ξ-∘ (ξ-i-swap ⟦ e ⟧ ⊤-value) ξ-i-drop))
+∨-⊤ : ∀ {V e} → ⟨ V , ⟦ e ⟧ , ⊤-value ⟩ ∨ ′→⟨ V , ⊤-value ⟩
+∨-⊤ {V} {e} = ξ-∘ (ξ-` (ξ-i-clone ⊤-value)) (ξ-` (ξ-i-apply (ξ-∘ (ξ-` (ξ-i-swap ⟦ e ⟧ ⊤-value)) (ξ-` ξ-i-drop))))
 
 quoteₙ : ℕ → Expr
 quoteₙ zero = ` quot
 quoteₙ (suc n) = quoteₙ n ∘ ` swap ∘ ` quot ∘ ` swap ∘ ` compose
 
-quote₂-thm : ∀ {V e e′} → ⟨ V , ⟦ e ⟧ , ⟦ e′ ⟧ ⟩ quoteₙ 1 →⟨ V , ⟦ e ∘ e′ ⟧ ⟩
+quote₂-thm : ∀ {V e e′} → ⟨ V , ⟦ e ⟧ , ⟦ e′ ⟧ ⟩ quoteₙ 1 ′→⟨ V , ⟦ e ∘ e′ ⟧ ⟩
 quote₂-thm {V} {e} {e′} = ξ-∘
-                            (ξ-∘ (ξ-∘ (ξ-∘ ξ-i-quote (ξ-i-swap ⟦ e ⟧ ⟦ e′ ⟧)) ξ-i-quote)
-                             (ξ-i-swap ⟦ e′ ⟧ ⟦ e ⟧))
-                            ξ-i-compose
+                            (ξ-∘
+                             (ξ-∘ (ξ-∘ (ξ-` ξ-i-quote) (ξ-` (ξ-i-swap ⟦ e ⟧ ⟦ e′ ⟧)))
+                              (ξ-` ξ-i-quote))
+                             (ξ-` (ξ-i-swap ⟦ e′ ⟧ ⟦ e ⟧)))
+                            (ξ-` ξ-i-compose)
 
 composeₙ : ℕ → Expr
 composeₙ zero = ` compose
