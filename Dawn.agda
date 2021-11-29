@@ -71,7 +71,7 @@ data ⟨_⟩_→⟨_⟩ : Stack → Expr → Stack → Set where
             ---------------------------
           → ⟨ V ⟩ [ e ] →⟨ V ,′ ⟦ e ⟧ ⟩
 
-  _e-∘′_ : ∀ {V V′ W e e′}
+  _e-∘_ : ∀ {V V′ W e e′}
         → ⟨ V  ⟩ e  →⟨ V′ ⟩
         → ⟨ V′ ⟩ e′ →⟨ W  ⟩
           --------------------
@@ -80,9 +80,9 @@ data ⟨_⟩_→⟨_⟩ : Stack → Expr → Stack → Set where
 e-comp-assoc′ : ∀ {V W e₁ e₂ e₃} → ⟨ V ⟩ (e₁ ∘′ e₂) ∘′ e₃ →⟨ W ⟩ ↔ ⟨ V ⟩ e₁ ∘′ (e₂ ∘′ e₃) →⟨ W ⟩
 e-comp-assoc′
   = mk↔
-    {f = λ{ ((l e-∘′ l₁) e-∘′ r) → l e-∘′ (l₁ e-∘′ r) }}
-    {f⁻¹ = λ{ (l e-∘′ (r e-∘′ r₁)) → (l e-∘′ r) e-∘′ r₁ }}
-    ((λ{ (l e-∘′ (r e-∘′ r₁)) → refl }) , λ{ ((l e-∘′ l₁) e-∘′ r) → refl })
+    {f = λ{ ((l e-∘ l₁) e-∘ r) → l e-∘ (l₁ e-∘ r) }}
+    {f⁻¹ = λ{ (l e-∘ (r e-∘ r₁)) → (l e-∘ r) e-∘ r₁ }}
+    ((λ{ (l e-∘ (r e-∘ r₁)) → refl }) , λ{ ((l e-∘ l₁) e-∘ r) → refl })
 
 ⊥ : Expr
 ⊥ = [ ` drop ]
@@ -100,23 +100,23 @@ e-comp-assoc′
       → (v : Value e)
       → (v′ : Value e′)
       → ⟨ V ,′ v ,′ v′ ⟩ ⊥ ∘′ ` apply →⟨ V ,′ v ⟩
-⊥-thm {V} v v′ = e-quote e-∘′ i-apply (i-drop v′)
+⊥-thm {V} v v′ = e-quote e-∘ i-apply (i-drop v′)
 
 ⊤-thm : ∀ {V e e′}
       → (v : Value e)
       → (v′ : Value e′)
       → ⟨ V ,′ v ,′ v′ ⟩ ⊤ ∘′ ` apply →⟨ V ,′ v′ ⟩
-⊤-thm {V} {e} {e′} v v′ = e-quote e-∘′ i-apply (i-swap v v′ e-∘′ i-drop v)
+⊤-thm {V} {e} {e′} v v′ = e-quote e-∘ i-apply (i-swap v v′ e-∘ i-drop v)
 
 ∨ : Expr
 ∨ = ` clone ∘′ ` apply
 
 ∨-⊥-⊥ : ∀ {V e} → ⟨ V ,′ ⟦ e ⟧ ,′ ⊥ᵥ ⟩ ∨ →⟨ V ,′ ⟦ e ⟧ ⟩
-∨-⊥-⊥ = i-clone ⟦ ` drop ⟧ e-∘′ i-apply (i-drop ⟦ ` drop ⟧)
+∨-⊥-⊥ = i-clone ⟦ ` drop ⟧ e-∘ i-apply (i-drop ⟦ ` drop ⟧)
 
 ∨-⊤ : ∀ {V e} → ⟨ V ,′ ⟦ e ⟧ ,′ ⊤ᵥ ⟩ ∨ →⟨ V ,′ ⊤ᵥ ⟩
-∨-⊤ {V} {e} = i-clone ⟦ ` swap ∘′ ` drop ⟧ e-∘′
-                i-apply (i-swap ⟦ e ⟧ ⟦ ` swap ∘′ ` drop ⟧ e-∘′ i-drop ⟦ e ⟧)
+∨-⊤ {V} {e} = i-clone ⟦ ` swap ∘′ ` drop ⟧ e-∘
+                i-apply (i-swap ⟦ e ⟧ ⟦ ` swap ∘′ ` drop ⟧ e-∘ i-drop ⟦ e ⟧)
 
 quoteₙ : ℕ → Expr
 quoteₙ zero = ` quot
@@ -127,9 +127,9 @@ quote₂-thm : ∀ {V e e′}
            → (v′ : Value e′)
              -------------------------------------------
            → ⟨ V ,′ v ,′ v′ ⟩ quoteₙ 1 →⟨ V ,′ ⟦ e ∘′ e′ ⟧ ⟩
-quote₂-thm {V} {e} {e′} v v′ = (((i-quote v′ e-∘′ i-swap v ⟦ e′ ⟧) e-∘′ i-quote v) e-∘′
+quote₂-thm {V} {e} {e′} v v′ = (((i-quote v′ e-∘ i-swap v ⟦ e′ ⟧) e-∘ i-quote v) e-∘
                                   i-swap ⟦ e′ ⟧ ⟦ e ⟧)
-                                 e-∘′ i-compose
+                                 e-∘ i-compose
 
 composeₙ : ℕ → Expr
 composeₙ zero = ` compose
