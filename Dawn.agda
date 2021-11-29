@@ -22,7 +22,7 @@ data Expr : Set where
 
 data Value : Expr → Set where
 
-  [_] : (e : Expr) → Value [ e ]
+  ⟦_⟧ : (e : Expr) → Value [ e ]
 
 infixl 4 _,_
 
@@ -39,8 +39,6 @@ infix 3 ⟨_⟩_→⟨_⟩
 
 data ⟨_⟩_→⟨_⟩ : Stack → Expr → Stack → Set where
 
-  -- TODO: Trying to use implicit Values in i-swap and i-clone ends in pain, so we require them explicitly.  It is unclear to me why they're fine in the other rules.
-
   i-swap : ∀ {V e e′}
          → (v : Value e)
          → (v′ : Value e′)
@@ -53,68 +51,80 @@ data ⟨_⟩_→⟨_⟩ : Stack → Expr → Stack → Set where
           → ⟨ V , v ⟩ ` clone →⟨ V , v , v ⟩
 
   i-drop : ∀ {V e}
+           → (v : Value e)
              ---------------------------
-           → ⟨ V , [ e ] ⟩ ` drop →⟨ V ⟩
+           → ⟨ V , v ⟩ ` drop →⟨ V ⟩
 
   i-quote : ∀ {V e}
+            → (v : Value e)
               -----------------------------------
-            → ⟨ V , [ e ] ⟩ ` quot →⟨ V , [ e ] ⟩
+            → ⟨ V , v ⟩ ` quot →⟨ V , ⟦ e ⟧ ⟩
 
   i-compose : ∀ {V e e′}
               ----------------------------------------------------
-            → ⟨ V , [ e ] , [ e′ ] ⟩ ` compose →⟨ V , [ e ∘ e′ ] ⟩
+            → ⟨ V , ⟦ e ⟧ , ⟦ e′ ⟧ ⟩ ` compose →⟨ V , ⟦ e ∘ e′ ⟧ ⟩
 
   i-apply : ∀ {V V′ e}
           → ⟨ V ⟩ e →⟨ V′ ⟩
             -----------------------------
-          → ⟨ V , [ e ] ⟩ ` apply →⟨ V′ ⟩
+          → ⟨ V , ⟦ e ⟧ ⟩ ` apply →⟨ V′ ⟩
 
   e-quote : ∀ {V e}
             --------------------------
-          → ⟨ V ⟩ [ e ] →⟨ V , [ e ] ⟩
+          → ⟨ V ⟩ [ e ] →⟨ V , ⟦ e ⟧ ⟩
 
-  e-∘ : ∀ {V V′ W v v′}
-      → ⟨ V  ⟩ v  →⟨ V′ ⟩
-      → ⟨ V′ ⟩ v′ →⟨ W  ⟩
-        -------------------
-      → ⟨ V ⟩ v ∘ v′ →⟨ W ⟩
+  _e-∘_ : ∀ {V V′ W e e′}
+        → ⟨ V  ⟩ e  →⟨ V′ ⟩
+        → ⟨ V′ ⟩ e′ →⟨ W  ⟩
+          -------------------
+        → ⟨ V ⟩ e ∘ e′ →⟨ W ⟩
 
 ⊥ : Expr
 ⊥ = [ ` drop ]
 
-⊥-value : Value ⊥
-⊥-value = [ ` drop ]
+⊥ᵥ : Value ⊥
+⊥ᵥ = ⟦ ` drop ⟧
 
 ⊤ : Expr
 ⊤ = [ ` swap ∘ ` drop ]
 
-⊤-value : Value ⊤
-⊤-value = [ ` swap ∘ ` drop ]
+⊤ᵥ : Value ⊤
+⊤ᵥ = ⟦ ` swap ∘ ` drop ⟧
 
-⊥-thm : ∀ {V e e′} → ⟨ V , [ e ] , [ e′ ] ⟩ ⊥ ∘ ` apply →⟨ V , [ e ] ⟩
-⊥-thm {V} {e} {e′} = e-∘ e-quote (i-apply i-drop)
+⊥-thm : ∀ {V e e′}
+      → (v : Value e)
+      → (v′ : Value e′)
+      → ⟨ V , v , v′ ⟩ ⊥ ∘ ` apply →⟨ V , v ⟩
+⊥-thm {V} v v′ = e-quote e-∘ i-apply (i-drop v′)
 
-⊤-thm : ∀ {V e e′} → ⟨ V , [ e ] , [ e′ ] ⟩ ⊤ ∘ ` apply →⟨ V , [ e′ ] ⟩
-⊤-thm {V} {e} {e′} = e-∘ e-quote (i-apply (e-∘ (i-swap [ e ] [ e′ ]) i-drop))
+⊤-thm : ∀ {V e e′}
+      → (v : Value e)
+      → (v′ : Value e′)
+      → ⟨ V , v , v′ ⟩ ⊤ ∘ ` apply →⟨ V , v′ ⟩
+⊤-thm {V} {e} {e′} v v′ = e-quote e-∘ i-apply (i-swap v v′ e-∘ i-drop v)
 
 ∨ : Expr
 ∨ = ` clone ∘ ` apply
 
-∨-⊥-⊥ : ∀ {V e} → ⟨ V , [ e ] , ⊥-value ⟩ ∨ →⟨ V , [ e ] ⟩
-∨-⊥-⊥ {V} {e} = e-∘ (i-clone ⊥-value) (i-apply i-drop)
+∨-⊥-⊥ : ∀ {V e} → ⟨ V , ⟦ e ⟧ , ⊥ᵥ ⟩ ∨ →⟨ V , ⟦ e ⟧ ⟩
+∨-⊥-⊥ = i-clone ⟦ ` drop ⟧ e-∘ i-apply (i-drop ⟦ ` drop ⟧)
 
-∨-⊤ : ∀ {V e} → ⟨ V , [ e ] , ⊤-value ⟩ ∨ →⟨ V , ⊤-value ⟩
-∨-⊤ {V} {e} = e-∘ (i-clone ⊤-value) (i-apply (e-∘ (i-swap [ e ] ⊤-value) i-drop))
+∨-⊤ : ∀ {V e} → ⟨ V , ⟦ e ⟧ , ⊤ᵥ ⟩ ∨ →⟨ V , ⊤ᵥ ⟩
+∨-⊤ {V} {e} = i-clone ⟦ ` swap ∘ ` drop ⟧ e-∘
+                i-apply (i-swap ⟦ e ⟧ ⟦ ` swap ∘ ` drop ⟧ e-∘ i-drop ⟦ e ⟧)
 
 quoteₙ : ℕ → Expr
 quoteₙ zero = ` quot
 quoteₙ (suc n) = quoteₙ n ∘ ` swap ∘ ` quot ∘ ` swap ∘ ` compose
 
-quote₂-thm : ∀ {V e e′} → ⟨ V , [ e ] , [ e′ ] ⟩ quoteₙ 1 →⟨ V , [ e ∘ e′ ] ⟩
-quote₂-thm {V} {e} {e′} = e-∘
-                            (e-∘ (e-∘ (e-∘ i-quote (i-swap [ e ] [ e′ ])) i-quote)
-                             (i-swap [ e′ ] [ e ]))
-                            i-compose
+quote₂-thm : ∀ {V e e′}
+           → (v : Value e)
+           → (v′ : Value e′)
+             -------------------------------------------
+           → ⟨ V , v , v′ ⟩ quoteₙ 1 →⟨ V , ⟦ e ∘ e′ ⟧ ⟩
+quote₂-thm {V} {e} {e′} v v′ = (((i-quote v′ e-∘ i-swap v ⟦ e′ ⟧) e-∘ i-quote v) e-∘
+                                  i-swap ⟦ e′ ⟧ ⟦ e ⟧)
+                                 e-∘ i-compose
 
 composeₙ : ℕ → Expr
 composeₙ zero = ` compose
