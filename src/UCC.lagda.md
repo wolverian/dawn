@@ -6,12 +6,6 @@ This is a partial formalization of Scott J Maddox's [Untyped Concatenative Calcu
 
 ## Imports
 
-Some mathematics:
-
-$$
-f(x) = 42
-$$
-
 ```
 open import Data.Product hiding (swap; _,′_)
 open import Data.Nat
@@ -132,13 +126,23 @@ e-comp-assoc′
 
 ### Booleans
 
+$$
+⊥ = [ \text{drop} ]
+$$
+
 ```
 ⊥ : Expr
 ⊥ = [ ` drop ]
 
 ⊥ᵥ : Value ⊥
 ⊥ᵥ = ⟦ ` drop ⟧
+```
 
+$$
+⊤ = [ \text{swap} \  \text{drop} ]
+$$
+
+```
 ⊤ : Expr
 ⊤ = [ ` swap ∘′ ` drop ]
 
