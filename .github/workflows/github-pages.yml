@@ -18,7 +18,7 @@ jobs:
           name: wolverian-dawn
       - run: nix flake check --no-build
       - run: nix build
-      - run: find .
+      - run: find result/
       - name: GitHub Pages
         uses: crazy-max/ghaction-github-pages@v2.5.0
         with:
