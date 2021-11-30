@@ -27,6 +27,7 @@ STYLES_DST := $(foreach style,$(STYLES_SRC),$(OUTPUT_DIR)/$(notdir $(style)))
 all: $(OUTPUT_DIR)/index.html $(OUTPUT_DIR)/UCC.html $(STYLES_DST) $(FONTS_DST)
 
 $(OUTPUT_DIR)/index.html: index.md
+	@mkdir -p $(OUTPUT_DIR)
 	$(PANDOC) $(PANDOC_FLAGS) -o $@ $<
 
 $(OUTPUT_DIR)/%.md: $(SRC_DIR)/%.lagda.md
