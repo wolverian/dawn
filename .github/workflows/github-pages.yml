@@ -13,9 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: cachix/install-nix-action@v15
-      - run: nix flake check --verbose --print-build-logs
+      - run: nix flake check --no-build
+      - run: nix build
       - run: find .
       - name: GitHub Pages
         uses: crazy-max/ghaction-github-pages@v2.5.0
         with:
-          build_dir: html
+          build_dir: result
