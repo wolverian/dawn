@@ -32,7 +32,7 @@ pre {
 header,
 .katex-display,
 .katex-display > .katex {
-  text-align: inherit;
+  text-align: inherit !important;
 }
 
 pre a,
