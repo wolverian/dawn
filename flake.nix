@@ -9,17 +9,16 @@
       let pkgs = nixpkgs.legacyPackages.${system};
       in
       rec {
-        packages = flake-utils.lib.flattenTree {
-          gnumake = pkgs.gnumake;
-          agda = pkgs.agda;
+        packages = {
+          wolverian-dawn = pkgs.runCommand "make"
+            {
+              buildInputs = [ pkgs.agda pkgs.gnumake ];
+            }
+            ''
+              $(pkgs.gnumake)/bin/make OUTPUT_DIR=$out
+            '';
         };
-        defaultPackage = packages.gnumake;
-        apps.gnumake = flake-utils.lib.mkApp
-          {
-            drv = packages.gnumake;
-            name = "make";
-          };
-        defaultApp = apps.gnumake;
+        defaultPackage = packages.wolverian-dawn;
       }
     );
 }

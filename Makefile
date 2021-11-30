@@ -1,5 +1,11 @@
+OUTPUT_DIR := html
+
 AGDA := agda
-AGDA_FLAGS := --html --html-highlight=auto --highlight-occurrences
+AGDA_FLAGS := \
+	--html \
+	--html-highlight=auto \
+	--highlight-occurrences \
+	--html-dir=$(OUTPUT_DIR)
 
 PANDOC := pandoc
 PANDOC_FLAGS := \
@@ -11,23 +17,23 @@ PANDOC_FLAGS := \
 	--css=style.css
 
 FONTS_SRC := $(wildcard fonts/*.otf)
-FONTS_DST := $(foreach font,$(FONTS_SRC),html/fonts/$(notdir $(font)))
+FONTS_DST := $(foreach font,$(FONTS_SRC),$(OUTPUT_DIR)/fonts/$(notdir $(font)))
 
 STYLES_SRC := $(wildcard *.css)
-STYLES_DST := $(foreach style,$(STYLES_SRC),html/$(notdir $(style)))
+STYLES_DST := $(foreach style,$(STYLES_SRC),$(OUTPUT_DIR)/$(notdir $(style)))
 
 .PHONY: all
-all: html/UCC.html $(STYLES_DST) $(FONTS_DST)
+all: $(OUTPUT_DIR)/UCC.html $(STYLES_DST) $(FONTS_DST)
 
-html/%.md: %.lagda.md
+$(OUTPUT_DIR)/%.md: %.lagda.md
 	$(AGDA) $(AGDA_FLAGS) $<
 
-html/%.html: html/%.md style.css $(FONTS_DST)
+$(OUTPUT_DIR)/%.html: $(OUTPUT_DIR)/%.md style.css $(FONTS_DST)
 	$(PANDOC) $(PANDOC_FLAGS) -o $@ $<
 
-html/fonts/%.otf: fonts/%.otf
-	@mkdir -p html/fonts
+$(OUTPUT_DIR)/fonts/%.otf: fonts/%.otf
+	@mkdir -p $(OUTPUT_DIR)/fonts
 	cp $< $@
 
-html/%.css: %.css
+$(OUTPUT_DIR)/%.css: %.css
 	cp $< $@
