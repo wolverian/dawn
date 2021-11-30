@@ -21,7 +21,7 @@
             ''
               ln -s ${./fonts} fonts
               ln -s ${./styles} styles
-              ln -s ${./src} src
+              cp -R ${./src} .
               ln -s ${./Makefile} Makefile
               ln -s ${./dawn.agda-lib} dawn.agda-lib
               ${pkgs.gnumake}/bin/make OUTPUT_DIR=$out
