@@ -1,6 +1,14 @@
 # The Untyped Concatenative Calculus
 
+This is a partial formalization of Scott J Maddox's [Untyped Concatenative Calculus](https://www.dawn-lang.org/posts/foundations-ucc/).
+
 ## Imports
+
+Some mathematics:
+
+$$
+f(x) = 42
+$$
 
 ```
 open import Data.Product hiding (swap; _,′_)
