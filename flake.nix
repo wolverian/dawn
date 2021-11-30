@@ -11,7 +11,7 @@
       rec {
         packages = flake-utils.lib.flattenTree {
           gnumake = pkgs.gnumake;
-          gitAndTools = pkgs.gitAndTools;
+          agda = pkgs.agda;
         };
         defaultPackage = packages.gnumake;
         apps.gnumake = flake-utils.lib.mkApp
