@@ -23,6 +23,7 @@
               ln -s ${./fonts} fonts
               ln -s ${./styles} styles
               ln -s ${./index.md} index.md
+              ln -s ${./header.html} header.html
               ln -s ${./Makefile} Makefile
               ln -s ${./dawn.agda-lib} dawn.agda-lib
               mkdir src && ln -s ${./src}/*.lagda.md src
