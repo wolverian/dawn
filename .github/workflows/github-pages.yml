@@ -15,7 +15,7 @@ jobs:
       - uses: cachix/install-nix-action@v15
       - uses: cachix/cachix-action@v10
         with:
-          name: wolverian-dawn
+          name: wolverian/dawn
       - run: nix flake check --no-build
       - run: nix build
       - run: find result/
