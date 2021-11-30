@@ -1,4 +1,6 @@
-# The Untyped Concatenative Calculus
+---
+title: The Untyped Concatenative Calculus
+---
 
 This is a partial formalization of Scott J Maddox's [Untyped Concatenative Calculus](https://www.dawn-lang.org/posts/foundations-ucc/).
 

@@ -1,7 +1,6 @@
 html {
   line-height: 1.15;
   font-size: 80%;
-
   font-family: Libertinus Serif, Georgia, serif;
 }
 body {
@@ -30,6 +29,7 @@ h3 {
 pre {
   font-family: Libertinus Math, Georgia, serif;
 }
+header,
 .katex-display,
 .katex-display > .katex {
   text-align: inherit;
