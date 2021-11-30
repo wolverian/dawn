@@ -13,10 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: cachix/install-nix-action@v15
-        with:
-          extra_nix_config: |
-            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
       - run: nix flake check --verbose --print-build-logs
+      - run: find .
       - name: GitHub Pages
         uses: crazy-max/ghaction-github-pages@v2.5.0
         with:
