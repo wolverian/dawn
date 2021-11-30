@@ -21,9 +21,11 @@
             ''
               ln -s ${./fonts} fonts
               ln -s ${./styles} styles
-              cp -R ${./src} .
+              mkdir src
+              ln -s ${./src}/*.lagda.md src
               ln -s ${./Makefile} Makefile
               ln -s ${./dawn.agda-lib} dawn.agda-lib
+              find .
               ${pkgs.gnumake}/bin/make OUTPUT_DIR=$out
             '';
         };
