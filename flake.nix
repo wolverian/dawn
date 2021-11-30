@@ -15,6 +15,7 @@
             {
               buildInputs = [
                 pkgs.gnumake
+                pkgs.pandoc
                 (pkgs.agda.withPackages (p: [ p.standard-library ]))
               ];
             }
