@@ -13,12 +13,13 @@
         packages = {
           wolverian-dawn = pkgs.runCommand "wolverian-dawn"
             {
-              buildInputs = [ pkgs.gnumake ];
+              buildInputs = [ pkgs.gnumake pkgs.agda ];
             }
             ''
               ln -s ${./fonts} fonts
               ln -s ${./styles} styles
               ln -s ${./src} src
+              ln -s ${./Makefile} Makefile
               ${pkgs.gnumake}/bin/make OUTPUT_DIR=$out
             '';
         };
