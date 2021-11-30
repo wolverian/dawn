@@ -1,3 +1,4 @@
+SRC_DIR := src
 OUTPUT_DIR := html
 
 AGDA := agda
@@ -19,21 +20,22 @@ PANDOC_FLAGS := \
 FONTS_SRC := $(wildcard fonts/*.otf)
 FONTS_DST := $(foreach font,$(FONTS_SRC),$(OUTPUT_DIR)/fonts/$(notdir $(font)))
 
-STYLES_SRC := $(wildcard *.css)
+STYLES_SRC := $(wildcard styles/*.css)
 STYLES_DST := $(foreach style,$(STYLES_SRC),$(OUTPUT_DIR)/$(notdir $(style)))
 
 .PHONY: all
 all: $(OUTPUT_DIR)/UCC.html $(STYLES_DST) $(FONTS_DST)
 
-$(OUTPUT_DIR)/%.md: %.lagda.md
+$(OUTPUT_DIR)/%.md: $(SRC_DIR)/%.lagda.md
 	$(AGDA) $(AGDA_FLAGS) $<
 
-$(OUTPUT_DIR)/%.html: $(OUTPUT_DIR)/%.md style.css $(FONTS_DST)
+$(OUTPUT_DIR)/%.html: $(OUTPUT_DIR)/%.md $(STYLES_DST) $(FONTS_DST)
 	$(PANDOC) $(PANDOC_FLAGS) -o $@ $<
 
 $(OUTPUT_DIR)/fonts/%.otf: fonts/%.otf
 	@mkdir -p $(OUTPUT_DIR)/fonts
 	cp $< $@
 
-$(OUTPUT_DIR)/%.css: %.css
+$(OUTPUT_DIR)/%.css: styles/%.css
+	@mkdir -p $(OUTPUT_DIR)
 	cp $< $@

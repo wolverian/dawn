@@ -9,16 +9,22 @@
       let pkgs = nixpkgs.legacyPackages.${system};
       in
       rec {
+        defaultPackage = packages.wolverian-dawn;
         packages = {
           wolverian-dawn = pkgs.runCommand "wolverian-dawn"
             {
-              buildInputs = [ pkgs.agda pkgs.gnumake ];
+              buildInputs = [ pkgs.gnumake ];
             }
             ''
-              make OUTPUT_DIR=$out
+              ln -s ${./fonts} fonts
+              ln -s ${./styles} styles
+              ln -s ${./src} src
+              ${pkgs.gnumake}/bin/make OUTPUT_DIR=$out
             '';
         };
-        defaultPackage = packages.wolverian-dawn;
+        checks = {
+          build = self.defaultPackage."${system}";
+        };
       }
     );
 }
