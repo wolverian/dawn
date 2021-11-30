@@ -53,7 +53,7 @@ data Stack : Set where
        → Stack
 ```
 
-# Small-Step Semantics
+## Small-Step Semantics
 
 ```
 infix 3 ⟨_⟩_→⟨_⟩
