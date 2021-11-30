@@ -29,21 +29,29 @@ h3 {
 pre {
   font-family: Libertinus Math, Georgia, serif;
 }
+pre a,
+code a {
+  text-decoration: none;
+}
+pre a:link:hover,
+code a:link:hover {
+  background-color: rgb(255, 255, 145);
+}
+
+/* KaTeX Overrides */
+
 header,
 .katex-display,
 .katex-display > .katex {
   text-align: inherit !important;
 }
-
-pre a,
-code a {
-  text-decoration: none;
+.katex,
+.katex .mathdefault {
+  font-family: Libertinus Math, KaTeX_Main, Georgia, serif !important;
+  font-size: 1em !important;
 }
 
-pre a:link:hover,
-code a:link:hover {
-  background-color: rgb(255, 255, 145);
-}
+/* Font Faces */
 
 /* Sans Regular */
 @font-face {
