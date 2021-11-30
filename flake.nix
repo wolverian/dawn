@@ -10,12 +10,12 @@
       in
       rec {
         packages = {
-          wolverian-dawn = pkgs.runCommand "make"
+          wolverian-dawn = pkgs.runCommand "wolverian-dawn"
             {
               buildInputs = [ pkgs.agda pkgs.gnumake ];
             }
             ''
-              $(pkgs.gnumake)/bin/make OUTPUT_DIR=$out
+              make OUTPUT_DIR=$out
             '';
         };
         defaultPackage = packages.wolverian-dawn;
