@@ -16,7 +16,7 @@ jobs:
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-      - run: make
+      - run: nix run
       - name: GitHub Pages
         uses: crazy-max/ghaction-github-pages@v2.5.0
         with:
