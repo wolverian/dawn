@@ -19,8 +19,8 @@ jobs:
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Build HTML
         run: nix build --verbose --print-build-logs
-      - name: Copy HTML so the next step can read it 
-        run: run: cp -vHR result html
+      - name: Copy HTML so the next step can read it
+        run: cp -vHR result html
       - name: GitHub Pages
         uses: crazy-max/ghaction-github-pages@v2.5.0
         with:
