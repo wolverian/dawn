@@ -2,21 +2,22 @@ name: Deploy GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - run: make
-    - name: GitHub Pages
-      uses: crazy-max/ghaction-github-pages@v2.5.0
-      with:
-        build_dir: html
-        
-
+      - uses: actions/checkout@v2
+      - uses: cachix/install-nix-action@v15
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - run: make
+      - name: GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v2.5.0
+        with:
+          build_dir: html
