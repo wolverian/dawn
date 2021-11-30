@@ -33,9 +33,10 @@ pre a,
 code a {
   text-decoration: none;
 }
+pre .hover-highlight,
 pre a:link:hover,
 code a:link:hover {
-  background-color: rgb(255, 255, 145);
+  background-color: rgb(255, 255, 145) !important;
 }
 
 /* KaTeX Overrides */
