@@ -13,7 +13,10 @@
         packages = {
           wolverian-dawn = pkgs.runCommand "wolverian-dawn"
             {
-              buildInputs = [ pkgs.gnumake pkgs.agda ];
+              buildInputs = [
+                pkgs.gnumake
+                (pkgs.agda.withPackages (p: [ p.standard-library ]))
+              ];
             }
             ''
               ln -s ${./fonts} fonts
