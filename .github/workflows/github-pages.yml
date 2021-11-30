@@ -13,6 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: cachix/install-nix-action@v15
+      - uses: cachix/cachix-action@v10
+        with:
+          name: wolverian-dawn
       - run: nix flake check --no-build
       - run: nix build
       - run: find .
